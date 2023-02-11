@@ -1,5 +1,6 @@
 import subprocess
 import locale
+import chardet
 
 # 1. Каждое из слов «разработка», «сокет», «декоратор» представить в строковом формате и проверить тип и содержание
 # соответствующих переменных. Затем с помощью онлайн-конвертера преобразовать строковые представление в формат Unicode
@@ -15,14 +16,14 @@ var_str = [string1, string2, string3]
 for _ in var_str:
     print(f'Содержимое: {_}, тип {type(_)}')
 
-string1_utf8 = b'\xd1\x80\xd0\xb0\xd0\xb7\xd1\x80\xd0\xb0\xd0\xb1\xd0\xbe\xd1\x82\xd0\xba\xd0\xb0'
-string2_utf8 = b'\xd1\x81\xd0\xbe\xd0\xba\xd0\xb5\xd1\x82'
-string3_utf8 = b'\xd0\xb4\xd0\xb5\xd0\xba\xd0\xbe\xd1\x80\xd0\xb0\xd1\x82\xd0\xbe\xd1\x80'
+string1_utf8 = '\u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0430'
+string2_utf8 = '\u0441\u043e\u043a\u0435\u0442'
+string3_utf8 = '\u0434\u0435\u043a\u043e\u0440\u0430\u0442\u043e\u0440'
 
 var_utf8 = [string1_utf8, string2_utf8, string3_utf8]
 
 for _ in var_utf8:
-    print(f'Содержимое: {_.decode()}, тип {type(_)}')
+    print(f'Содержимое: {_}, тип {type(_)}')
 
 # 2. Каждое) из слов «class», «function», «method» записать в байтовом типе без преобразования в последовательность
 # кодов (не используя методы encode и decode) и определить тип, содержимое и длину соответствующих переменных.
@@ -66,7 +67,9 @@ for sites in ['yandex.ru', 'youtube.com']:
     args = ['ping', sites]
     subproc_ping = subprocess.Popen(args, stdout=subprocess.PIPE)
     for line in subproc_ping.stdout:
-        print(line.decode('cp866').encode('utf-8').decode('utf-8'))
+        result = chardet.detect(line)
+        line = line.decode(result['encoding']).encode('utf-8')
+        print(line.decode('utf-8'))
 
 # 6. Создать текстовый файл test_file.txt, заполнить его тремя строками: «сетевое программирование», «сокет»,
 # «декоратор». Проверить кодировку файла по умолчанию. Принудительно открыть файл в формате Unicode и вывести
@@ -85,7 +88,7 @@ f.close()
 print()
 print(f'Файл в кодировке по умолчанию ({def_co}).')
 print('--------------------------------------------')
-with open('file.txt', encoding='cp1251') as f_n:
+with open('file.txt', encoding=def_co) as f_n:
     for el_str in f_n:
         print(el_str[:-1])
 print('--------------------------------------------')
