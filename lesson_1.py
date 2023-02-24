@@ -81,7 +81,7 @@ print('------------------Задача №6------------------------------')
 def_co = locale.getpreferredencoding()
 print(f'Кодировка по умолчанию: {def_co}')
 
-f = open('file.txt', 'w', encoding='utf8')
+f = open('file.txt', 'w')
 f.writelines(['сетевое программирование\n', 'сокет\n', 'декоратор\n'])
 f.close()
 
@@ -92,11 +92,15 @@ with open('file.txt', encoding=def_co) as f_n:
     for el_str in f_n:
         print(el_str[:-1])
 print('--------------------------------------------')
+f_n.close()
 
 print()
 print(f'Файл в кодировке UTF-8.')
 print('--------------------------------------------')
+
 with open('file.txt', encoding='utf-8') as f_n:
     for el_str in f_n:
         print(el_str[:-1])
+
 print('--------------------------------------------')
+f_n.close()
